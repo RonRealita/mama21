@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Selamat Ulang Tahun, Sayang 💖</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600;800&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg1:#F3D0D7;--bg2:#F6F5F2;--card:#F6F5F2;--accent:#FF90BB}
+    *{box-sizing:border-box}
+    body{
+      margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+      background:radial-gradient(circle at 10% 10%, rgba(255,255,255,0.15), transparent 20%),
+                 linear-gradient(135deg,var(--bg1),var(--bg2));
+      font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      color:#533B4D;padding:24px;
+    }
+    .card{
+      width:100%;max-width:900px;background:var(--card);border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,0.12);
+      overflow:hidden;display:grid;grid-template-columns:1fr 420px;gap:0;align-items:stretch;
+    }
+    @media (max-width:900px){.card{grid-template-columns:1fr}}
+
+    .left{padding:40px}
+    .logo{font-family:'Great Vibes';font-size:36px;color:var(--accent);}
+    h1{margin:10px 0 6px;font-size:28px}
+    p.lead{margin:0 0 18px;color:#533B4D}
+
+    .message-box{background:linear-gradient(180deg,#fff 0%,#fff0 100%);padding:18px;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
+    .typewriter{font-size:18px;min-height:120px;line-height:1.6}
+    .controls{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+    button{background:var(--accent);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
+    button.secondary{background:transparent;color:var(--accent);border:2px solid var(--accent)}
+
+    .right{background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.photo {
+  width: 100%;
+  padding-bottom: 133.33%; /* 4/3 = 1.333... → jadi 133.33% */
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: inset 0 0 60px rgba(255,255,255,0.04);
+}
+
+.photo video {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+    .hearts{display:flex;gap:8px;align-items:center}
+    .small{font-size:14px;color:#533B4D}
+
+    /* confetti canvas sits on top */
+    #confetti{position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;z-index:999}
+
+    footer{font-size:13px;color:#533B4D;margin-top:12px}
+
+    /* small helper */
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <canvas id="confetti"></canvas>
+  <div class="card" role="main">
+    <div class="left">
+      <div class="logo">This's for You, <br> My Sweety 💌</div>
+      <h1 id="title">Happy 21st Birthday!</h1>
+      <p class="lead">click the button to open the message! (volume up 🔊)</p>
+
+      <div class="message-box">
+        <div id="type" class="typewriter" aria-live="polite"></div>
+      </div>
+
+      <div class="controls">
+        <button id="reveal">Click Here!</button>
+      </div>
+
+      <footer> <code>Mama Turning 21 🫶</code> </footer>
+    </div>
+
+    <div class="right">
+<div class="photo">
+  <video id="video" autoplay loop muted playsinline>
+    <source src="v.mp4" type="video/mp4">
+    Browsermu tidak mendukung video.
+  </video>
+</div>
+      <div class="hearts">
+        <!-- <div class="heart floating" aria-hidden="true"></div> -->
+        <div class="small">Sending virtual hug 🤗💖</div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audio" loop>
+    <!-- Ganti src dengan link mp3 favoritmu atau kosongkan jika tidak mau musik -->
+    <source src="p.mp3" type="audio/mpeg">
+    Browsermu tidak mendukung audio.
+  </audio>
+
+  <script>
+    // --- Teks pesan yang bisa kamu ubah ---
+    const message = `Sayangku,
+
+Di hari istimewa ini aku ingin mengingatkan betapa berharganya dirimu bagiku. Setiap tawa dan bisikmu adalah alasan aku merasa lebih hidup.
+
+Terima kasih sudah menjadi kamu—setia, manja, dan luar biasa. Semoga semua harapan dan mimpimu satu per satu jadi kenyataan. Aku di sini, selalu mendukung setiap langkahmu.
+
+Selamat ulang tahun, cinta. Aku mencintaimu lebih dari kata-kata mampu menggambarkan.`;
+
+    // --- Simple typewriter that respects line breaks ---
+    const typeEl = document.getElementById('type');
+    const revealBtn = document.getElementById('reveal');
+    const audio = document.getElementById('audio');
+    const playMusicBtn = document.getElementById('playMusic');
+    const downloadBtn = document.getElementById('download');
+
+    function typeText(text, el, speed=20){
+      el.innerHTML = '';
+      let i=0;
+      const interval = setInterval(()=>{
+        const char = text[i];
+        if(!char){ clearInterval(interval); return; }
+        if(char === '\n'){ el.innerHTML += '<br/>' }
+        else{ el.innerHTML += char }
+        i++;
+      }, speed);
+    }
+
+    // Confetti minimal implementation
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+    window.addEventListener('resize', ()=>{ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; });
+
+    function random(min, max){ return Math.random()*(max-min)+min }
+
+    function Confetto(){
+      this.x = random(0,W); this.y = random(-H,-20);
+      this.w = random(6,12); this.h = random(8,14);
+      this.vx = random(-1,1); this.vy = random(2,6);
+      this.rot = random(0,Math.PI*2);
+      this.color = `hsl(${~~random(0,360)},80%,60%)`;
+    }
+    Confetto.prototype.draw = function(){
+      ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot);
+      ctx.fillStyle = this.color;
+      ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);
+      ctx.restore();
+    }
+    const confetti = [];
+    function startConfetti(count=80){
+      for(let i=0;i<count;i++) confetti.push(new Confetto());
+      animateConfetti();
+      setTimeout(()=>{ stopConfetti(); }, 8000);
+    }
+    let confettiAnim = null;
+    function animateConfetti(){
+      ctx.clearRect(0,0,W,H);
+      for(let i=confetti.length-1;i>=0;i--){
+        const c = confetti[i]; c.x += c.vx; c.y += c.vy; c.rot += 0.05; c.vy += 0.03;
+        c.draw();
+        if(c.y > H+20) confetti.splice(i,1);
+      }
+      if(confetti.length>0) confettiAnim = requestAnimationFrame(animateConfetti);
+    }
+    function stopConfetti(){ cancelAnimationFrame(confettiAnim); confetti.length=0; ctx.clearRect(0,0,W,H); }
+
+    // Reveal sequence
+    revealBtn.addEventListener('click', ()=>{
+    typeText(message, typeEl, 18);
+    startConfetti(120);
+
+    // mainkan musik otomatis ketika pesan dibuka
+    if(audio.paused){
+      audio.play().catch(err => {
+        console.log("Autoplay dicegah browser, harus interaksi user: ", err);
+      });
+      playMusicBtn.textContent = 'Pause Musik';
+    }
+  });
+
+    // Simple "download kartu": render visible card area to canvas and download as PNG
+    downloadBtn.addEventListener('click', async ()=>{
+      // create a temporary canvas and draw the card area
+      const card = document.querySelector('.card');
+      const rect = card.getBoundingClientRect();
+      const scale = 2; // higher resolution
+      const tmp = document.createElement('canvas');
+      tmp.width = rect.width*scale; tmp.height = rect.height*scale;
+      const tctx = tmp.getContext('2d');
+
+      // draw background
+      tctx.fillStyle = getComputedStyle(document.body).background;
+      tctx.fillRect(0,0,tmp.width,tmp.height);
+
+      // draw photo as rectangle
+      const photo = document.getElementById('photo');
+      const bg = photo.style.backgroundImage.slice(5,-2);
+      const img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.src = bg;
+      img.onload = ()=>{
+        // left column text
+        tctx.fillStyle = '#fff';
+        tctx.fillRect(0,0,tmp.width,tmp.height);
+        // draw photo box on right
+        const pw = tmp.width*0.45; const ph = tmp.height*0.45; const px = tmp.width - pw - 40*scale; const py = 40*scale;
+        tctx.drawImage(img, px, py, pw, ph);
+        // add title and message
+        tctx.fillStyle = '#3b262b'; tctx.font = `${28*scale}px GreatVibes, serif`;
+        tctx.fillText('Selamat Ulang Tahun', 40*scale, 80*scale);
+        tctx.font = `${12*scale}px sans-serif`;
+        // split message lines
+        const lines = message.split('\n');
+        let y = 120*scale;
+        for(const line of lines){ tctx.fillText(line, 40*scale, y); y += 22*scale; }
+
+        // download
+        const link = document.createElement('a');
+        link.download = 'kartu_ultah.png';
+        link.href = tmp.toDataURL('image/png');
+        link.click();
+      };
+      img.onerror = ()=>{ alert('Gagal memuat foto. Coba ganti foto atau buka halaman lewat server (CORS).'); }
+    });
+
+    // accessibility: allow pressing Enter on Reveal
+    revealBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter') revealBtn.click(); });
+
+    // Small UX: auto show small preview after load
+    window.addEventListener('load', ()=>{
+      document.getElementById('title').textContent = 'Selamat Ulang Tahun, Sayang ❤️';
+      // show a short preview text (not the whole message)
+      const preview = message.split('\n').slice(0,2).join(' ');
+      typeText(preview+'...', typeEl, 6);
+    });
+  </script>
+</body>
+</html>
