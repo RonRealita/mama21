@@ -27,37 +27,35 @@
     p.lead{margin:0 0 18px;color:#533B4D}
 
     .message-box{background:linear-gradient(180deg,#fff 0%,#fff0 100%);padding:18px;border-radius:12px;border:1px solid rgba(0,0,0,0.04)}
-    .typewriter{font-size:18px;min-height:120px;line-height:1.6}
+    .typewriter{font-family: "Courier New", Courier, monospace; font-size:18px;min-height:120px;line-height:1.6}
     .controls{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
     button{background:var(--accent);border:none;color:#fff;padding:10px 16px;border-radius:10px;cursor:pointer;font-weight:600}
     button.secondary{background:transparent;color:var(--accent);border:2px solid var(--accent)}
 
     .right{background:linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));padding:28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
-.photo {
-  width: 100%;
-  padding-bottom: 133.33%; /* 4/3 = 1.333... → jadi 133.33% */
-  position: relative;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: inset 0 0 60px rgba(255,255,255,0.04);
-}
-
-.photo video {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    .photo {
+      width: 100%;
+      padding-bottom: 133.33%; /* 4/3 ratio */
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: inset 0 0 60px rgba(255,255,255,0.04);
+    }
+    .photo video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
     .hearts{display:flex;gap:8px;align-items:center}
     .small{font-size:14px;color:#533B4D}
 
-    /* confetti canvas sits on top */
+    /* canvas love jatuh */
     #confetti{position:fixed;left:0;top:0;pointer-events:none;width:100%;height:100%;z-index:999}
 
     footer{font-size:13px;color:#533B4D;margin-top:12px}
 
-    /* small helper */
     .hidden{display:none}
   </style>
 </head>
@@ -67,7 +65,7 @@
     <div class="left">
       <div class="logo">This's for You, <br> My Sweety 💌</div>
       <h1 id="title">Happy 21st Birthday!</h1>
-      <p class="lead">click the button to open the message! (volume up 🔊)</p>
+      <p class="lead"><code>click the button to open the message! (volume up 🔊)</code></p>
 
       <div class="message-box">
         <div id="type" class="typewriter" aria-live="polite"></div>
@@ -81,42 +79,44 @@
     </div>
 
     <div class="right">
-<div class="photo">
-  <video id="video" autoplay loop muted playsinline>
-    <source src="v.mp4" type="video/mp4">
-    Browsermu tidak mendukung video.
-  </video>
-</div>
+      <div class="photo">
+        <video id="video" autoplay loop muted playsinline>
+          <source src="v.mp4" type="video/mp4">
+          Browsermu tidak mendukung video.
+        </video>
+      </div>
       <div class="hearts">
-        <!-- <div class="heart floating" aria-hidden="true"></div> -->
-        <div class="small">Sending virtual hug 🤗💖</div>
+        <div class="small"> <code>Sending virtual hug 🤗💖</code></div>
       </div>
     </div>
   </div>
 
   <audio id="audio" loop>
-    <!-- Ganti src dengan link mp3 favoritmu atau kosongkan jika tidak mau musik -->
     <source src="p.mp3" type="audio/mpeg">
     Browsermu tidak mendukung audio.
   </audio>
 
   <script>
-    // --- Teks pesan yang bisa kamu ubah ---
-    const message = `Sayangku,
+    // --- Teks pesan ---
+    const message = `Happy Birthday My Sweetheart!
 
-Di hari istimewa ini aku ingin mengingatkan betapa berharganya dirimu bagiku. Setiap tawa dan bisikmu adalah alasan aku merasa lebih hidup.
+Panjang umur sehat selalu mama, semoga makin berkah, makin lancar rejekinya, makin pinter, makin rajin solat, makin manutan, makin syg sm ak hehe AAMIIN.
 
-Terima kasih sudah menjadi kamu—setia, manja, dan luar biasa. Semoga semua harapan dan mimpimu satu per satu jadi kenyataan. Aku di sini, selalu mendukung setiap langkahmu.
+Maaf ya mama aku belom bisa pulang buat main sama mama :(
 
-Selamat ulang tahun, cinta. Aku mencintaimu lebih dari kata-kata mampu menggambarkan.`;
+Makasi ya ma udah bisa bikin aku percaya lagi sama kamu, makasi banyak udah mau berubah buat aku, udah mau nurutin semua yang aku mau, udah mau LDR-an sama aku padahal kamu pernah bilang kalo kamu gasuka banget sama LDR :(, makasi udah mau sabar menhadapi dunia per-strict parent-an ini.. 
 
-    // --- Simple typewriter that respects line breaks ---
+Mama do you remember your birthday last year.. haha mama to be honest i still feel guilty for you both.. i still afraid kena karma lagi.. aku inget pas kamu cutoff dia perasaan kamu ke aku juga ilang kan.. i remember all to well.. aku tkut tahun ini abis kamu ultah kamu gitu lagi ke aku.. semoga cuma rasa takut aku doang ya ma jangan sampe kejadian..
+
+Semoga kita bisa terus ngerayain birthday bareng-bareng selamanya ya mama, semoga kamu gk bosen lagi sama ak huhu :(
+
+Thank you for still loving me. Always be my one call away, mama! happy birthday love <3`;
+
     const typeEl = document.getElementById('type');
     const revealBtn = document.getElementById('reveal');
     const audio = document.getElementById('audio');
-    const playMusicBtn = document.getElementById('playMusic');
-    const downloadBtn = document.getElementById('download');
 
+    // efek ketikan
     function typeText(text, el, speed=20){
       el.innerHTML = '';
       let i=0;
@@ -129,7 +129,7 @@ Selamat ulang tahun, cinta. Aku mencintaimu lebih dari kata-kata mampu menggamba
       }, speed);
     }
 
-    // Confetti minimal implementation
+    // canvas
     const canvas = document.getElementById('confetti');
     const ctx = canvas.getContext('2d');
     let W = canvas.width = window.innerWidth;
@@ -138,103 +138,69 @@ Selamat ulang tahun, cinta. Aku mencintaimu lebih dari kata-kata mampu menggamba
 
     function random(min, max){ return Math.random()*(max-min)+min }
 
-    function Confetto(){
-      this.x = random(0,W); this.y = random(-H,-20);
-      this.w = random(6,12); this.h = random(8,14);
-      this.vx = random(-1,1); this.vy = random(2,6);
-      this.rot = random(0,Math.PI*2);
-      this.color = `hsl(${~~random(0,360)},80%,60%)`;
+    // bentuk love
+    function Heart(){
+      this.x = random(0, W);
+      this.y = random(-H, -20);
+      this.size = random(12, 26);
+      this.vx = random(-1, 1);
+      this.vy = random(2, 5);
+      this.rot = random(0, Math.PI*2);
+      this.color = `hsl(${~~random(330, 360)}, 80%, 60%)`; // pink-merah
     }
-    Confetto.prototype.draw = function(){
-      ctx.save(); ctx.translate(this.x,this.y); ctx.rotate(this.rot);
+    Heart.prototype.draw = function(){
+      ctx.save();
+      ctx.translate(this.x, this.y);
+      ctx.rotate(this.rot);
+      ctx.scale(this.size/20, this.size/20);
+      ctx.beginPath();
+      ctx.moveTo(0, -10);
+      ctx.bezierCurveTo(10, -20, 25, -5, 0, 20);
+      ctx.bezierCurveTo(-25, -5, -10, -20, 0, -10);
+      ctx.closePath();
       ctx.fillStyle = this.color;
-      ctx.fillRect(-this.w/2,-this.h/2,this.w,this.h);
+      ctx.fill();
       ctx.restore();
     }
-    const confetti = [];
-    function startConfetti(count=80){
-      for(let i=0;i<count;i++) confetti.push(new Confetto());
+
+    const hearts = [];
+    function startConfetti(count=120){
+      for(let i=0;i<count;i++) hearts.push(new Heart());
       animateConfetti();
       setTimeout(()=>{ stopConfetti(); }, 8000);
     }
+
     let confettiAnim = null;
     function animateConfetti(){
       ctx.clearRect(0,0,W,H);
-      for(let i=confetti.length-1;i>=0;i--){
-        const c = confetti[i]; c.x += c.vx; c.y += c.vy; c.rot += 0.05; c.vy += 0.03;
-        c.draw();
-        if(c.y > H+20) confetti.splice(i,1);
+      for(let i=hearts.length-1;i>=0;i--){
+        const h = hearts[i];
+        h.x += h.vx; h.y += h.vy; h.rot += 0.03;
+        h.draw();
+        if(h.y > H+20) hearts.splice(i,1);
       }
-      if(confetti.length>0) confettiAnim = requestAnimationFrame(animateConfetti);
+      if(hearts.length>0) confettiAnim = requestAnimationFrame(animateConfetti);
     }
-    function stopConfetti(){ cancelAnimationFrame(confettiAnim); confetti.length=0; ctx.clearRect(0,0,W,H); }
+    function stopConfetti(){
+      cancelAnimationFrame(confettiAnim);
+      hearts.length=0;
+      ctx.clearRect(0,0,W,H);
+    }
 
-    // Reveal sequence
+    // klik tombol
     revealBtn.addEventListener('click', ()=>{
-    typeText(message, typeEl, 18);
-    startConfetti(120);
-
-    // mainkan musik otomatis ketika pesan dibuka
-    if(audio.paused){
-      audio.play().catch(err => {
-        console.log("Autoplay dicegah browser, harus interaksi user: ", err);
-      });
-      playMusicBtn.textContent = 'Pause Musik';
-    }
-  });
-
-    // Simple "download kartu": render visible card area to canvas and download as PNG
-    downloadBtn.addEventListener('click', async ()=>{
-      // create a temporary canvas and draw the card area
-      const card = document.querySelector('.card');
-      const rect = card.getBoundingClientRect();
-      const scale = 2; // higher resolution
-      const tmp = document.createElement('canvas');
-      tmp.width = rect.width*scale; tmp.height = rect.height*scale;
-      const tctx = tmp.getContext('2d');
-
-      // draw background
-      tctx.fillStyle = getComputedStyle(document.body).background;
-      tctx.fillRect(0,0,tmp.width,tmp.height);
-
-      // draw photo as rectangle
-      const photo = document.getElementById('photo');
-      const bg = photo.style.backgroundImage.slice(5,-2);
-      const img = new Image();
-      img.crossOrigin = 'anonymous';
-      img.src = bg;
-      img.onload = ()=>{
-        // left column text
-        tctx.fillStyle = '#fff';
-        tctx.fillRect(0,0,tmp.width,tmp.height);
-        // draw photo box on right
-        const pw = tmp.width*0.45; const ph = tmp.height*0.45; const px = tmp.width - pw - 40*scale; const py = 40*scale;
-        tctx.drawImage(img, px, py, pw, ph);
-        // add title and message
-        tctx.fillStyle = '#3b262b'; tctx.font = `${28*scale}px GreatVibes, serif`;
-        tctx.fillText('Selamat Ulang Tahun', 40*scale, 80*scale);
-        tctx.font = `${12*scale}px sans-serif`;
-        // split message lines
-        const lines = message.split('\n');
-        let y = 120*scale;
-        for(const line of lines){ tctx.fillText(line, 40*scale, y); y += 22*scale; }
-
-        // download
-        const link = document.createElement('a');
-        link.download = 'kartu_ultah.png';
-        link.href = tmp.toDataURL('image/png');
-        link.click();
-      };
-      img.onerror = ()=>{ alert('Gagal memuat foto. Coba ganti foto atau buka halaman lewat server (CORS).'); }
+      typeText(message, typeEl, 18);
+      startConfetti(200); // makin banyak love
+      if(audio.paused){
+        audio.play().catch(err => {
+          console.log("Autoplay dicegah browser: ", err);
+        });
+      }
     });
 
-    // accessibility: allow pressing Enter on Reveal
-    revealBtn.addEventListener('keyup', (e)=>{ if(e.key==='Enter') revealBtn.click(); });
-
-    // Small UX: auto show small preview after load
+    // preview singkat
     window.addEventListener('load', ()=>{
       document.getElementById('title').textContent = 'Selamat Ulang Tahun, Sayang ❤️';
-      // show a short preview text (not the whole message)
       const preview = message.split('\n').slice(0,2).join(' ');
       typeText(preview+'...', typeEl, 6);
     });
